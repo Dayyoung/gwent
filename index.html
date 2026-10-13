@@ -10,6 +10,8 @@
 	<meta name="keywords" content="arun, sundaram, programmer, gwent, tw3, witcher, card, game, gamedev, play" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="cards.css" />
+	<link rel="stylesheet" type="text/css" href="gallery.css" />
 </head>
 
 <body>
@@ -248,6 +250,9 @@
 	
 	<a id="download-deck" class="deck-options">Download Deck</a>
 	<a id="download-json" style="display:none;"></a>
+	<a id="open-how-to-play" class="deck-options">❖ 플레이 방법 (Rules)</a>
+	<a id="open-gallery" class="deck-options">❖ 카드 도감 (Gallery)</a>
+	<a id="toggle-language" class="deck-options">🌐 언어: 한국어</a>
 	
 	<h2 id="card-bank-title" class="card-contianer-title">Card Collection</h2>
 	<h2 id="card-deck-title" class="card-contianer-title">Cards in Deck</h2>
@@ -292,6 +297,81 @@
 <div data-title="Toggle sound effects" id="toggle-sfx" class="center deck-menu settings-button"><img src="svg/sfx.svg"></img></div>
 <div data-title="Toggle game messages" id="toggle-notifications" class="center deck-menu settings-button"><img src="svg/notification.svg"></img></div>
 
+<!-- 216 CARDS ENCYCLOPEDIA (GALLERY) MODAL -->
+<section id="card-gallery-modal" class="hide">
+	<div class="gallery-header">
+		<div class="gallery-title-box">
+			<h2>❖ 궨트 전체 카드 도감 (216 Cards Library)</h2>
+			<span id="gallery-count-badge" class="gallery-badge">표시 중: 216 / 216장</span>
+		</div>
+		<div class="gallery-filters">
+			<button class="filter-btn active" data-filter="all">전체 (216)</button>
+			<button class="filter-btn" data-filter="sheet1_2">Sheet 1·2 유닛 (185)</button>
+			<button class="filter-btn" data-filter="sheet3">Sheet 3 리더/특수 (31)</button>
+			<button class="filter-btn" data-filter="realms">북부 왕국</button>
+			<button class="filter-btn" data-filter="nilfgaard">닐프가드</button>
+			<button class="filter-btn" data-filter="monsters">괴물</button>
+			<button class="filter-btn" data-filter="scoiatael">스코이아'텔</button>
+			<button class="filter-btn" data-filter="skellige">스켈리게</button>
+			<button class="filter-btn" data-filter="neutral_special">중립·특수·날씨</button>
+		</div>
+		<button id="close-gallery-btn" class="close-gallery-btn">✕ 닫기</button>
+	</div>
+	<div class="gallery-content-area" id="gallery-card-grid-container">
+		<!-- Injected dynamically by gallery.js -->
+	</div>
+</section>
+
+<!-- CARD DETAIL MODAL -->
+<section id="gallery-detail-modal" class="hide">
+	<div class="detail-modal-body">
+		<button id="detail-close-btn" class="detail-close-btn">✕</button>
+		<div id="detail-card-img" class="detail-card-img-box"></div>
+		<div class="detail-info-box">
+			<h1 id="detail-title-ko">카드 이름</h1>
+			<div id="detail-title-en" class="detail-eng-name">English Name</div>
+			<div id="detail-meta-tags" class="detail-meta-row"></div>
+			<div id="detail-lore" class="detail-lore-box"></div>
+		</div>
+	</div>
+</section>
+
+<!-- HOW TO PLAY (RULES) MODAL -->
+<section id="how-to-play-modal" class="hide">
+	<div class="rules-modal-dialog">
+		<div class="rules-header">
+			<div class="rules-title-box">
+				<h2 id="rules-modal-title">❖ 궨트 플레이 방법 & 게임 규칙 (How to Play)</h2>
+				<span class="rules-subtitle" id="rules-modal-sub">전술적 카드 배치와 두뇌 심리전 가이드</span>
+			</div>
+			<button id="close-rules-btn" class="close-rules-btn">✕ 닫기</button>
+		</div>
+		<div class="rules-content-area">
+			<div class="rule-card-section">
+				<h3 id="rules-sec1-title">1. 게임 목표 및 승리 조건 (Objective)</h3>
+				<div id="rules-sec1-body" class="rule-section-body"></div>
+			</div>
+			<div class="rule-card-section">
+				<h3 id="rules-sec2-title">2. 턴 진행 방식과 '패스(Pass)'의 미학 (Turns & Passing)</h3>
+				<div id="rules-sec2-body" class="rule-section-body"></div>
+			</div>
+			<div class="rule-card-section">
+				<h3 id="rules-sec3-title">3. 전장의 3대 전선과 카드 분류 (Battlefield Rows & Types)</h3>
+				<div id="rules-sec3-body" class="rule-section-body"></div>
+			</div>
+			<div class="rule-card-section">
+				<h3 id="rules-sec4-title">4. 전세를 뒤집는 특수 & 날씨 카드 (Special & Weather)</h3>
+				<div id="rules-sec4-body" class="rule-section-body"></div>
+			</div>
+			<div class="rule-card-section">
+				<h3 id="rules-sec5-title">5. 5대 진영 고유 특성 (Faction Perks)</h3>
+				<div id="rules-sec5-body" class="rule-section-body"></div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript" src="i18n.js"></script>
 <script type="text/javascript" src="common.js"></script>
 <script type="text/javascript" src="cards.js"></script>
 <script type="text/javascript" src="decks.js"></script>
@@ -299,6 +379,7 @@
 <script type="text/javascript" src="factions.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="text/javascript" src="gwent.js"></script>
+<script type="text/javascript" src="gallery.js"></script>
 </body>
 
 </html>

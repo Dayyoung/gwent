@@ -352,7 +352,7 @@ html {
 	transition-timing-function: ease-in;
 }
 
-#carousel > :nth-child(1) > :not(:nth-child(3)):hover {
+#carousel > :nth-child(1) > :not(:nth-child(3)):not(.hide):hover {
 	box-shadow: 0 0 1vw goldenrod;
 }
 
@@ -369,7 +369,7 @@ html {
 	background-origin: border-box;
 	transition: box-shadow 0.1s, translate calc(var(--carousel-trans-time) - 0.05s);
 }
-#carousel > :nth-child(1) > :nth-child(3):hover {
+#carousel > :nth-child(1) > :nth-child(3):not(.hide):hover {
 	box-shadow: 0 0 2vw goldenrod;
 }
 
@@ -399,6 +399,14 @@ html {
 	display:inline-block;
 	background-size:cover;
 	background-position: center;
+}
+
+#carousel .card-lg.hide {
+	visibility: hidden !important;
+	opacity: 0 !important;
+	box-shadow: none !important;
+	border: none !important;
+	pointer-events: none !important;
 }
 
 #carousel .card-description {
@@ -1267,16 +1275,18 @@ main { background-image: url('img/boardtest8.png'); }
 
 #card-leader p {
 	font-size: 1.1vw;
+	font-weight: bold;
 	text-align: center;
-	color: #8f6c36;
-	line-height: 0%;
-	margin: 9%;
+	color: #ffd700;
+	line-height: 1.2;
+	margin: 0 0 0.4vw 0;
+	text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
 #card-leader > div {
 	position: relative;
 	height: 84.5%;
-	margin-top: 24.5%;
+	margin-top: 4%;
 	
 	background-size: contain;
 	border-radius: .5vw;

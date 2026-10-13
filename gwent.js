@@ -324,7 +324,7 @@ class ControllerAI {
 	// Calculates the weight for playing a weather card
 	weightWeather(card) {
 		let rows;
-		if (card.name === "Clear Weather")
+		if (card.filename === "clear" || card.name.includes("Clear"))
 			rows = Object.values(weather.types).filter(t => t.count > 0).flatMap(t => t.rows);
 		else
 			rows = Object.values(weather.types).filter(t => t.count === 0 && t.name === card.abilities[0]).flatMap(t => t.rows);
@@ -343,13 +343,13 @@ class ControllerAI {
 	
 	// Calculates the weight for playing a mardroeme card
 	weightMardroemeRow(card, row){
-		if (card.name === "Mardroeme" && row.special !== null)
+		if ((card.filename === "mardroeme" || card.name.includes("Mardroeme")) && row.special !== null)
 			return 0;
-		let ermion = card.holder.hand.cards.filter(c => c.name === "Ermion").length > 0;
-		if (ermion && card.name !== "Ermion" && row === board.row[1])
+		let ermion = card.holder.hand.cards.filter(c => c.filename === "ermion" || c.name.includes("Ermion")).length > 0;
+		if (ermion && card.filename !== "ermion" && !card.name.includes("Ermion") && row === board.row[1])
 			return 0;
-		let name = row === board.row[1] ? "Young Berserker" : "Berserker";
-		let n = row.cards.filter(c => c.name === name).length;
+		let name = row === board.row[1] ? "Young" : "Berserker";
+		let n = row.cards.filter(c => c.name.includes(name) || (c.abilities || []).includes("berserker")).length;
 		let weight = row === board.row[2] ? 10*n : 8*n*n - 2*n
 		return Math.max(1, weight);
 	}
@@ -388,9 +388,9 @@ class ControllerAI {
 	
 	// Assigns a weights for how likely the controller with play a card from its hand
 	weightCard(card, max, data){
-		if (card.name === "Decoy")
+		if (card.filename === "decoy" || card.name.includes("Decoy"))
 			return data.spy.length ? 50 : data.medic.length ? 15 : data.scorch.length  ? 10 : max.me.length ? 1 : 0;
-		if (card.name === "Commander's Horn") {
+		if (card.filename === "horn" || card.name.includes("Horn")) {
 			let rows = [0,1,2].map(i => board.row[i]).filter(r => r.special === null);
 			if (!rows.length)
 				return 0;
@@ -1146,7 +1146,7 @@ class Row extends CardContainer {
 	
 	// Calculates the current power of a card affected by row affects
 	calcCardScore(card) {
-		if (card.name === "decoy")
+		if (card.filename === "decoy" || card.name.toLowerCase().includes("decoy"))
 			return 0;
 		let total = card.basePower;
 		if (card.hero)
@@ -1243,7 +1243,7 @@ class Weather extends CardContainer {
 		super.addCard(card);
 		AudioManager.playSFX(card.audio);
 		card.elem.classList.add("noclick");
-		if (card.name === "Clear Weather"){
+		if (card.filename === "clear" || card.name.includes("Clear")){
 			// TODO Sunlight animation
 			await sleep(500);
 			this.clearWeather();
@@ -1721,6 +1721,14 @@ class Card {
 		{
 			this.muster = card_data.muster;
 		}
+		if (card_data.characterId)
+		{
+			this.characterId = card_data.characterId;
+		}
+		this.title_ko = card_data.title_ko || this.name;
+		this.title_en = card_data.title_en || this.name;
+		this.lore_ko = card_data.lore_ko || "";
+		this.lore_en = card_data.lore_en || "";
 		this.placed = [];
 		this.removed = [];
 		this.activated = [];
@@ -1769,7 +1777,7 @@ class Card {
 	
 	// Sets and displays the current power of this card
 	setPower(n){
-		if (this.name === "Decoy")
+		if (this.filename === "decoy" || this.name.includes("Decoy"))
 			return;
 		let elem = this.elem.children[0].children[0];
 		if (n !== this.power) {
@@ -1837,7 +1845,9 @@ class Card {
 	
 	// Returns true if card is sent to a Row's special slot
 	isSpecial() {
-		return this.name === "Commander's Horn" || this.name === "Mardroeme";
+		return this.filename === "horn" || this.filename === "mardroeme" ||
+		       this.abilities.includes("horn") || this.abilities.includes("mardroeme") ||
+		       this.name.includes("Horn") || this.name.includes("Mardroeme") || this.name.includes("나팔") || this.name.includes("비약");
 	}
 
 	isHero() { return this.hero; }
@@ -1860,7 +1870,11 @@ class Card {
 		let elem = document.createElement("div");
 		elem.style.backgroundImage = smallURL(card.faction + "_" + card.filename);
 		elem.classList.add("card");
-		elem.setAttribute('data-title', card.name);
+		if (card.characterId) {
+			elem.setAttribute('data-character-id', card.characterId);
+		}
+		const currentTitle = (window.I18N && I18N.currentLang === 'en') ? (card.title_en || card.name) : (card.title_ko || card.name);
+		elem.setAttribute('data-title', currentTitle);
 		elem.addEventListener("click", () => ui.selectCard(card), false);
 		
 		if (card.row === "leader")
@@ -2084,16 +2098,16 @@ class UI {
 			await ui.viewCardsInContainer(row);
 			return;
 		}
-		if (this.previewCard.name === "Decoy")
+		if (this.previewCard.filename === "decoy" || this.previewCard.name.includes("Decoy"))
 			return;
 		let card = this.previewCard;
 		let holder = card.holder;
 		this.hidePreview();
 		this.enablePlayer(false);
-		if (card.name === "Scorch"){
+		if (card.filename === "scorch" || card.name.includes("Scorch")){
 			this.hidePreview();
 			await ability_dict["scorch"].activated(card);
-		} else if (card.name === "Decoy") {
+		} else if (card.filename === "decoy" || card.name.includes("Decoy")) {
 			return;
 		} else {
 			await board.moveTo(card, row, card.holder.hand);
@@ -2150,11 +2164,16 @@ class UI {
 	setDescription(card, desc){
 		if (!card)
 		{
-			desc.children[1].innerHTML = "NULL";
+			desc.children[1].innerHTML = "";
 			desc.children[2].innerHTML = "";
 			return;
 		}
-		if (card.hero || card.row === "agile" || card.abilities.length > 0 || card.faction === "faction") {
+		const isEn = window.I18N && I18N.currentLang === 'en';
+		const title = isEn ? (card.title_en || card.name) : (card.title_ko || card.name);
+		let lore = isEn ? (card.lore_en || card.desc) : (card.lore_ko || card.desc);
+		if (!lore && card.desc) lore = card.desc;
+
+		if (card.hero || card.row === "agile" || card.abilities.length > 0 || card.faction === "faction" || card.row === "leader" || lore) {
 			desc.classList.remove("hide");
 			let str = card.row === "agile" ? "agile" : "";
 			if (card.abilities.length)
@@ -2165,12 +2184,12 @@ class UI {
 				str = "avenger";
 			if (str === "scorch_c" || str == "scorch_r" || str === "scorch_s")
 				str = "scorch";
-			if (card.row === "leader" || card.faction === "faction" || card.abilities.length === 0 && card.row !== "agile")
+			if (card.row === "leader" || card.faction === "faction" || (card.abilities.length === 0 && card.row !== "agile"))
 				desc.children[0].style.backgroundImage = "";
 			else
 				desc.children[0].style.backgroundImage = iconURL("card_ability_" + str);
-			desc.children[1].innerHTML = card.desc_name;
-			desc.children[2].innerHTML = card.desc;
+			desc.children[1].innerHTML = title;
+			desc.children[2].innerHTML = lore || card.desc;
 		} else {
 			desc.classList.add("hide");
 		}
@@ -2270,7 +2289,7 @@ class UI {
 		
 		weather.elem.classList.add("noclick");
 		
-		if (card.name === "Scorch") {
+		if (card.filename === "scorch" || card.name.includes("Scorch")) {
 			for (let r of board.row){
 				r.elem.classList.add("row-selectable");
 				r.elem_special.classList.add("row-selectable");
@@ -2292,7 +2311,7 @@ class UI {
 		
 		board.row.forEach( r => r.elem_special.classList.add("noclick") );
 		
-		if (card.name === "Decoy"){
+		if (card.filename === "decoy" || card.name.includes("Decoy")){
 			for (let i=0; i<6; ++i) {
 				let r = board.row[i];
 				let units = r.cards.filter(c => c.isUnit());
@@ -2404,7 +2423,13 @@ class Carousel {
 	// Called by the client to cycle cards displayed by n
 	shift(event, n){
 		(event || window.event).stopPropagation();
-		this.index = Math.max(0, Math.min(this.indices.length-1, this.index+n));
+		const N = this.indices.length;
+		if (N >= 5) {
+			this.index = (this.index + n) % N;
+			if (this.index < 0) this.index += N;
+		} else {
+			this.index = Math.max(0, Math.min(N - 1, this.index + n));
+		}
 		AudioManager.playSFX('ui_card');
 		this.update();
 	}
@@ -2458,21 +2483,46 @@ class Carousel {
 	// Updates the visuals of the current selection of cards
 	update(){
 		this.indices = this.container.cards.reduce((a,c,i)=> (!this.predicate || this.predicate(c)) ? a.concat([i]) : a, []);
-		if (this.indices.length <= 0)
+		const N = this.indices.length;
+		if (N <= 0)
 		{
 			return this.exit();
 		}
-		if (this.index >= this.indices.length)
-			this.index =  this.indices.length-1;
-		for (let i=0; i<this.previews.length; i++) {
-			let curr = this.index - 2 + i;
-			if (curr >= 0 && curr < this.indices.length) {
+		if (this.index >= N)
+			this.index = N - 1;
+		if (this.index < 0)
+			this.index = 0;
+
+		const isCircular = (N >= 5);
+
+		for (let i = 0; i < this.previews.length; i++) {
+			let curr;
+			let isValid = false;
+
+			if (isCircular) {
+				curr = (this.index - 2 + i) % N;
+				if (curr < 0) curr += N;
+				isValid = true;
+			} else {
+				curr = this.index - 2 + i;
+				isValid = (curr >= 0 && curr < N);
+			}
+
+			if (isValid) {
 				let card = this.container.cards[this.indices[curr]];
 				this.previews[i].style.backgroundImage = largeURL(card.faction + "_" + card.filename);
+				this.previews[i].style.visibility = "visible";
+				this.previews[i].style.opacity = "1";
+				this.previews[i].style.boxShadow = "";
+				this.previews[i].style.border = "";
 				this.previews[i].classList.remove("hide");
 				this.previews[i].classList.remove("noclick");
 			} else {
 				this.previews[i].style.backgroundImage = "";
+				this.previews[i].style.visibility = "hidden";
+				this.previews[i].style.opacity = "0";
+				this.previews[i].style.boxShadow = "none";
+				this.previews[i].style.border = "none";
 				this.previews[i].classList.add("hide");
 				this.previews[i].classList.add("noclick");
 			}
@@ -2764,7 +2814,19 @@ class DeckMaker {
 	selectFaction() {
 		let container = new CardContainer();
 		container.cards = Object.keys(factions).map( f => {
-			return {abilities: [f], filename: f, desc_name: factions[f].name, desc: factions[f].description, faction: "faction"};
+			const fac = factions[f];
+			const isEn = window.I18N && I18N.currentLang === 'en';
+			return {
+				abilities: [f],
+				filename: f,
+				name: isEn ? (fac.name_en || fac.name) : (fac.name_ko || fac.name),
+				title_ko: fac.name_ko || fac.name,
+				title_en: fac.name_en || fac.name,
+				desc: isEn ? (fac.desc_en || fac.description) : (fac.desc_ko || fac.description),
+				lore_ko: fac.desc_ko || fac.description,
+				lore_en: fac.desc_en || fac.description,
+				faction: "faction"
+			};
 		});
 		let index = container.cards.reduce((a,c,i) => c.filename === this.faction ? i : a, 0);
 		ui.queueCarousel(container, 1, (c,i) => {
@@ -3537,3 +3599,26 @@ let dm = new DeckMaker();
 
 
 document.addEventListener('click', () => userInteracted = true, { once: true });
+
+// Multilingual support listener
+window.addEventListener('gwent-language-changed', (e) => {
+	const isEn = e.detail && e.detail.lang === 'en';
+	if (typeof dm !== 'undefined' && dm && dm.bank && dm.deck) {
+		dm.bank.concat(dm.deck).forEach(c => {
+			if (c.card && c.elem) {
+				const title = isEn ? (c.card.title_en || c.card.name) : (c.card.title_ko || c.card.name);
+				c.elem.setAttribute('data-title', title);
+			}
+		});
+	}
+	document.querySelectorAll('.card[data-title]').forEach(elem => {
+		const cid = elem.getAttribute('data-character-id');
+		if (cid && window.card_dict) {
+			const found = card_dict.find(c => c.characterId == cid);
+			if (found) {
+				const title = isEn ? (found.title_en || found.name) : (found.title_ko || found.name);
+				elem.setAttribute('data-title', title);
+			}
+		}
+	});
+});

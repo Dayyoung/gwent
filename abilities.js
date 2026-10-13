@@ -264,7 +264,7 @@ var ability_dict = {
 	foltest_king: {
 		description: "Pick an Impenetrable Fog card from your deck and play it instantly.",
 		activated: async card => {
-			let out = card.holder.deck.findCard(c => c.name === "Impenetrable Fog");
+			let out = card.holder.deck.findCard(c => c.filename === "fog" || c.name.includes("Fog"));
 			if (out)
 				await out.autoplay(card.holder.deck);
 		},
@@ -273,7 +273,7 @@ var ability_dict = {
 	foltest_lord: {
 		description: "Clear any weather effects (resulting from Biting Frost, Torrential Rain or Impenetrable Fog cards) in play.",
 		activated: async () => await weather.clearWeather(),
-		weight: (card, ai) =>  ai.weightCard( {row:"weather", name:"Clear Weather"} )
+		weight: (card, ai) =>  ai.weightCard( {row:"weather", name:"Clear Weather", filename:"clear"} )
 	},
 	foltest_siegemaster: {
 		description: "Doubles the strength of all your Siege units (unless a Commander's Horn is also present on that row).",
@@ -293,7 +293,7 @@ var ability_dict = {
 	emhyr_imperial: {
 		description: "Pick a Torrential Rain card from your deck and play it instantly.",
 		activated: async card => {
-			let out = card.holder.deck.findCard(c => c.name === "Torrential Rain");
+			let out = card.holder.deck.findCard(c => c.filename === "rain" || c.name.includes("Rain"));
 			if (out)
 				await out.autoplay(card.holder.deck);
 		},
@@ -436,7 +436,7 @@ var ability_dict = {
 	francesca_pureblood: {
 		description: "Pick a Biting Frost card from your deck and play it instantly.",
 		activated: async card => {
-			let out = card.holder.deck.findCard(c => c.name === "Biting Frost");
+			let out = card.holder.deck.findCard(c => c.filename === "frost" || c.name.includes("Frost"));
 			if (out)
 				await out.autoplay(card.holder.deck);
 		},
