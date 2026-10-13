@@ -13,13 +13,21 @@
   cursor: pointer;
 }
 
+#upload-deck {
+  left: 8.5%;
+}
+
+#change-faction {
+  left: 19.5%;
+}
+
 #download-deck {
-  left: 39%;
+  left: 29.5%;
   cursor: pointer;
 }
 
 #open-how-to-play {
-  left: 50%;
+  left: 60.5%;
   padding: 0.25vw 0.75vw;
   background: linear-gradient(180deg, rgba(30, 160, 120, 0.3), rgba(12, 28, 22, 0.85));
   border: 1px solid rgba(40, 200, 150, 0.75);
@@ -41,7 +49,7 @@
 }
 
 #open-gallery {
-  left: 66%;
+  left: 73.5%;
   padding: 0.25vw 0.75vw;
   background: linear-gradient(180deg, rgba(212, 175, 55, 0.3), rgba(24, 18, 10, 0.85));
   border: 1px solid rgba(212, 175, 55, 0.8);
@@ -63,7 +71,7 @@
 }
 
 #toggle-language {
-  left: 81%;
+  left: 86.0%;
   padding: 0.25vw 0.75vw;
   background: linear-gradient(180deg, rgba(80, 140, 230, 0.3), rgba(16, 24, 45, 0.85));
   border: 1px solid rgba(100, 170, 255, 0.8);

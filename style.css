@@ -1162,23 +1162,60 @@ main { background-image: url('img/boardtest8.png'); }
 	position: absolute;
 	height: 5%;
 	width: 100%;
-	top: 6%;
+	top: 4.8%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	z-index: 86;
 }
 
-#deck-customization h1 {
-    position: absolute;
-    font-size: 1.45vw;
-    color: #dedede;
-    line-height: 220%;
-    text-transform: capitalize;
-    padding: 0 3%;
-	
+#game-brand-title {
+	position: relative;
+	font-size: 1.85vw;
+	font-weight: 900;
+	letter-spacing: 0.08em;
+	color: #ffd700;
+	background: linear-gradient(180deg, #ffffff 0%, #ffe680 40%, #e0a526 80%, #b8860b 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+	filter: drop-shadow(0 0 1.2vw rgba(212, 175, 55, 0.45));
+	font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", serif;
+	margin: 0;
+	padding: 0;
+	line-height: 1.2;
+	text-transform: none;
+}
 
-	
-	top: -60%;
-	
-    background-size: contain;
-    background-repeat: no-repeat;
+#leader-faction-wrapper {
+	position: absolute;
+	top: 17.5%;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 87;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+#leader-faction-title {
+	position: relative;
+	font-size: 1.15vw;
+	font-weight: 800;
+	color: #ffd700;
+	line-height: 2.2vw;
+	padding-left: 2.4vw;
+	padding-right: 0.5vw;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: left center;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95), 0 0 0.8vw rgba(0, 0, 0, 0.8);
+	font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+	margin: 0;
+	letter-spacing: 0.02em;
 }
 
 #faction-description {

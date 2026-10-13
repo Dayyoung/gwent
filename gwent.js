@@ -2656,9 +2656,20 @@ class DeckMaker {
 			return;
 		if (!force && this.faction === faction_name)
 			return false;
-		this.elem.getElementsByTagName("h1")[0].innerHTML = factions[faction_name].name;
-		this.elem.getElementsByTagName("h1")[0].style.backgroundImage = iconURL("deck_shield_" + faction_name);
-		document.getElementById("faction-description").innerHTML = factions[faction_name].description;
+
+		const isEn = window.I18N && I18N.currentLang === 'en';
+		const factionNameStr = isEn ? (factions[faction_name].name_en || factions[faction_name].name) : (factions[faction_name].name_ko || factions[faction_name].name);
+		const factionDescStr = isEn ? (factions[faction_name].desc_en || factions[faction_name].description) : (factions[faction_name].desc_ko || factions[faction_name].description);
+
+		const leaderFactionTitle = document.getElementById("leader-faction-title");
+		if (leaderFactionTitle) {
+			leaderFactionTitle.innerHTML = factionNameStr;
+			leaderFactionTitle.style.backgroundImage = iconURL("deck_shield_" + faction_name);
+		}
+		const factionDesc = document.getElementById("faction-description");
+		if (factionDesc) {
+			factionDesc.innerHTML = factionDescStr;
+		}
 		
 		this.leaders = 
 			card_dict.map((c,i) => ({index: i, card:c}) )
@@ -3596,6 +3607,7 @@ AudioManager.init();
 
 ui.enablePlayer(false);
 let dm = new DeckMaker();
+window.dm = dm;
 
 
 document.addEventListener('click', () => userInteracted = true, { once: true });
@@ -3603,13 +3615,28 @@ document.addEventListener('click', () => userInteracted = true, { once: true });
 // Multilingual support listener
 window.addEventListener('gwent-language-changed', (e) => {
 	const isEn = e.detail && e.detail.lang === 'en';
-	if (typeof dm !== 'undefined' && dm && dm.bank && dm.deck) {
-		dm.bank.concat(dm.deck).forEach(c => {
-			if (c.card && c.elem) {
-				const title = isEn ? (c.card.title_en || c.card.name) : (c.card.title_ko || c.card.name);
-				c.elem.setAttribute('data-title', title);
+	if (typeof dm !== 'undefined' && dm) {
+		if (dm.faction && typeof factions !== 'undefined') {
+			const fac = factions[dm.faction];
+			if (fac) {
+				const leaderFactionTitle = document.getElementById("leader-faction-title");
+				if (leaderFactionTitle) {
+					leaderFactionTitle.innerHTML = isEn ? (fac.name_en || fac.name) : (fac.name_ko || fac.name);
+				}
+				const factionDesc = document.getElementById("faction-description");
+				if (factionDesc) {
+					factionDesc.innerHTML = isEn ? (fac.desc_en || fac.description) : (fac.desc_ko || fac.description);
+				}
 			}
-		});
+		}
+		if (dm.bank && dm.deck) {
+			dm.bank.concat(dm.deck).forEach(c => {
+				if (c.card && c.elem) {
+					const title = isEn ? (c.card.title_en || c.card.name) : (c.card.title_ko || c.card.name);
+					c.elem.setAttribute('data-title', title);
+				}
+			});
+		}
 	}
 	document.querySelectorAll('.card[data-title]').forEach(elem => {
 		const cid = elem.getAttribute('data-character-id');

@@ -310,6 +310,20 @@ const I18N = {
     const leaderElemP = document.querySelector('#card-leader > p');
     if (leaderElemP) leaderElemP.innerHTML = this.t('leader');
 
+    const leaderFactionTitle = document.getElementById('leader-faction-title');
+    const factionDesc = document.getElementById('faction-description');
+    if (window.dm && dm.faction && window.factions) {
+      const fac = factions[dm.faction];
+      if (fac) {
+        if (leaderFactionTitle) {
+          leaderFactionTitle.innerHTML = isKo ? (fac.name_ko || fac.name) : (fac.name_en || fac.name);
+        }
+        if (factionDesc) {
+          factionDesc.innerHTML = isKo ? (fac.desc_ko || fac.description) : (fac.desc_en || fac.description);
+        }
+      }
+    }
+
     const statsPs = document.querySelectorAll('#deck-stats > p');
     if (statsPs.length >= 10) {
       statsPs[0].innerHTML = this.t('total_cards');

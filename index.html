@@ -8,10 +8,11 @@
 	<meta name="author" content="Arun Sundaram" />
 	<meta name="description" content="Play the original Gwent minigame from The Witcher 3 in your browser! Includes cards from Hearts of Stone and Blood & Wine!" />
 	<meta name="keywords" content="arun, sundaram, programmer, gwent, tw3, witcher, card, game, gamedev, play" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<link rel="stylesheet" type="text/css" href="cards.css" />
 	<link rel="stylesheet" type="text/css" href="gallery.css" />
+	<link rel="stylesheet" type="text/css" href="responsive.css" />
 </head>
 
 <body>
@@ -237,28 +238,43 @@
 
 <section id="deck-customization">
 	<div id="faction-title" class="center">
-		<h1></h1>
+		<h1 id="game-brand-title">SNSHero.com - G-went</h1>
 	</div>
 	<p id="faction-description"></p>
 	
-	<label id="upload-deck" class="deck-options">
-		<input type="file" id="add-file" value="Import" style="display:none;"/>
-		Upload Deck
-	</label>
+	<div id="deck-options-container">
+		<label id="upload-deck" class="deck-options">
+			<input type="file" id="add-file" value="Import" style="display:none;"/>
+			Upload Deck
+		</label>
+		<a id="change-faction" class="deck-options">Change Faction</a>
+		<a id="download-deck" class="deck-options">Download Deck</a>
+		<a id="download-json" style="display:none;"></a>
+		<a id="open-how-to-play" class="deck-options">❖ 플레이 방법 (Rules)</a>
+		<a id="open-gallery" class="deck-options">❖ 카드 도감 (Gallery)</a>
+		<a id="toggle-language" class="deck-options">🌐 언어: 한국어</a>
+	</div>
 	
-	<a id="change-faction" class="deck-options">Change Faction</a>
-	
-	<a id="download-deck" class="deck-options">Download Deck</a>
-	<a id="download-json" style="display:none;"></a>
-	<a id="open-how-to-play" class="deck-options">❖ 플레이 방법 (Rules)</a>
-	<a id="open-gallery" class="deck-options">❖ 카드 도감 (Gallery)</a>
-	<a id="toggle-language" class="deck-options">🌐 언어: 한국어</a>
-	
+	<!-- Mobile Deckbuilder Tab Switcher -->
+	<div id="mobile-deck-tabs" class="mobile-only">
+		<button id="mobile-tab-bank" class="mobile-tab-btn active">
+			<span id="mobile-tab-bank-text">보유 카드 컬렉션</span>
+			<span id="mobile-tab-bank-count" class="tab-badge">0</span>
+		</button>
+		<button id="mobile-tab-deck" class="mobile-tab-btn">
+			<span id="mobile-tab-deck-text">덱 편성 카드</span>
+			<span id="mobile-tab-deck-count" class="tab-badge">0</span>
+		</button>
+	</div>
+
 	<h2 id="card-bank-title" class="card-contianer-title">Card Collection</h2>
 	<h2 id="card-deck-title" class="card-contianer-title">Cards in Deck</h2>
 	<div id="card-bank" class="card-array">
 	</div>
 	<div id="card-deck" class="card-array">
+	</div>
+	<div id="leader-faction-wrapper" class="center">
+		<h1 id="leader-faction-title" style="background-image: url('img/icons/deck_shield_realms.png');">Northern Realms</h1>
 	</div>
 	<div id="card-leader">
 		<p>Leader</p>
@@ -371,6 +387,17 @@
 	</div>
 </section>
 
+<!-- Rotate Device Prompt (Mobile Portrait in-game) -->
+<div id="rotate-device-overlay" class="hide">
+	<div class="rotate-device-backdrop"></div>
+	<div class="rotate-device-modal">
+		<div class="rotate-device-icon">🔄</div>
+		<h2 id="rotate-prompt-title">화면을 가로로 돌려주세요</h2>
+		<p id="rotate-prompt-desc">궨트는 가로 모드(Landscape)에서 전장과 손패가 가장 넓고 선명하게 표시됩니다.</p>
+		<button id="rotate-dismiss-btn">세로 모드로 계속하기</button>
+	</div>
+</div>
+
 <script type="text/javascript" src="i18n.js"></script>
 <script type="text/javascript" src="common.js"></script>
 <script type="text/javascript" src="cards.js"></script>
@@ -380,6 +407,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 <script type="text/javascript" src="gwent.js"></script>
 <script type="text/javascript" src="gallery.js"></script>
+<script type="text/javascript" src="responsive.js"></script>
 </body>
 
 </html>
