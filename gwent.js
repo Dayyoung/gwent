@@ -153,13 +153,13 @@ class ControllerAI {
 	
 	// Tells the Player that this object controls to play a card
 	async playCard(c, max, data){
-		if (c.name === "Commander's Horn")
+		if (c.filename === "horn" && !c.row)
 			await this.horn(c);
-		else if (c.name === "Mardroeme")
+		else if (c.filename === "mardroeme" && !c.row)
 			await this.mardroeme(c);
-		else if (c.name === "Decoy")
+		else if (c.filename === "decoy")
 			await this.decoy(c, max, data);
-		else if (c.name === "Scorch")
+		else if (c.filename === "scorch" && !c.row)
 			await this.scorch(c, max, data);
 		else
 			await this.player.playCard(c);
@@ -2077,7 +2077,7 @@ class UI {
 		if (pCard === null || card.holder.hand.cards.includes(card)) {
 			this.setSelectable(null, false);
 			this.showPreview(card);
-		} else if (pCard.name === "Decoy") {
+		} else if (pCard.filename === "decoy") {
 			this.hidePreview(card);
 			this.enablePlayer(false);
 			board.toHand(card, row);
@@ -2104,7 +2104,7 @@ class UI {
 		let holder = card.holder;
 		this.hidePreview();
 		this.enablePlayer(false);
-		if (card.filename === "scorch" || card.name.includes("Scorch")){
+		if (card.filename === "scorch"){
 			this.hidePreview();
 			await ability_dict["scorch"].activated(card);
 		} else if (card.filename === "decoy" || card.name.includes("Decoy")) {
@@ -2289,7 +2289,7 @@ class UI {
 		
 		weather.elem.classList.add("noclick");
 		
-		if (card.filename === "scorch" || card.name.includes("Scorch")) {
+		if (card.filename === "scorch") {
 			for (let r of board.row){
 				r.elem.classList.add("row-selectable");
 				r.elem_special.classList.add("row-selectable");
