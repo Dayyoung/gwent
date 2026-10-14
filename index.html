@@ -8,7 +8,7 @@
 	<meta name="author" content="Arun Sundaram" />
 	<meta name="description" content="Play the original Gwent minigame from The Witcher 3 in your browser! Includes cards from Hearts of Stone and Blood & Wine!" />
 	<meta name="keywords" content="arun, sundaram, programmer, gwent, tw3, witcher, card, game, gamedev, play" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes, viewport-fit=cover" />
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<link rel="stylesheet" type="text/css" href="cards.css" />
 	<link rel="stylesheet" type="text/css" href="gallery.css" />
@@ -17,7 +17,7 @@
 
 <body>
 
-<div id="dimensions" style="position:fixed;width:100vw;height:calc(100vw * 1080 / 1920);"></div>
+<div id="dimensions" style="position:fixed;width:100vw;height:calc(100vw * 1080 / 1920);pointer-events:none;"></div>
 
 <div id="youtube"></div>
 
@@ -396,6 +396,16 @@
 		<p id="rotate-prompt-desc">궨트는 가로 모드(Landscape)에서 전장과 손패가 가장 넓고 선명하게 표시됩니다.</p>
 		<button id="rotate-dismiss-btn">세로 모드로 계속하기</button>
 	</div>
+</div>
+
+<!-- Mobile In-game Touch Zoom Controls & Hint Toast -->
+<div id="board-zoom-controls" class="mobile-only hide">
+	<button id="btn-zoom-in" class="zoom-btn" title="확대">+</button>
+	<button id="btn-zoom-reset" class="zoom-btn zoom-btn-indicator" title="원위치 리셋">1.0x</button>
+	<button id="btn-zoom-out" class="zoom-btn" title="축소">−</button>
+</div>
+<div id="board-zoom-toast" class="mobile-only hide">
+	<span id="board-zoom-toast-text">💡 두 손가락으로 전장을 확대/축소하거나 이동할 수 있습니다.</span>
 </div>
 
 <script type="text/javascript" src="i18n.js"></script>

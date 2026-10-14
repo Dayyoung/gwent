@@ -1994,7 +1994,7 @@ class UI {
 	initYouTube(){
 		this.youtube = new YT.Player('youtube', {
 			videoId: "UE9fPWy1_o4",
-			playerVars:  { "autoplay" : 1, "controls" : 0, "loop" : 1, "playlist" : "UE9fPWy1_o4", "rel" : 0, "version" : 3, "modestbranding" : 1 },
+			playerVars:  { "autoplay" : 0, "controls" : 0, "loop" : 1, "playlist" : "UE9fPWy1_o4", "rel" : 0, "version" : 3, "modestbranding" : 1 },
 			events: { 'onStateChange': initButton }
 		});
 		
@@ -2002,19 +2002,19 @@ class UI {
 			if (ui.ytActive !== undefined)
 				return;
 			ui.ytActive = true;
-			ui.youtube.playVideo();
-			let timer = setInterval( () => {
-				if (ui.youtube.getPlayerState() !== YT.PlayerState.PLAYING)
-					ui.youtube.playVideo();
-				else {
-					clearInterval(timer);
-					ui.toggleMusic_elem.classList.remove("fade");
-					if (!Settings.music.isEnabled())
-					{
-						setTimeout(()=>ui.toggleMusic(), 10);
+			if (Settings.music.isEnabled()) {
+				ui.youtube.playVideo();
+				let timer = setInterval( () => {
+					if (ui.youtube.getPlayerState() !== YT.PlayerState.PLAYING)
+						ui.youtube.playVideo();
+					else {
+						clearInterval(timer);
+						ui.toggleMusic_elem.classList.remove("fade");
 					}
-				}
-			}, 500);
+				}, 500);
+			} else {
+				ui.toggleMusic_elem.classList.add("fade");
+			}
 		}
 	}
 	
@@ -3315,7 +3315,7 @@ class SavedString
 
 class Settings
 {
-	static music = new ToggleOption("gc-music", true);
+	static music = new ToggleOption("gc-music-v2", false);
 	static notifications = new ToggleOption("gc-notifications", true);
 	static soundEffects = new ToggleOption("gc-sound-effects", true);
 	static lastFaction = new SavedString("gc-last-faction", "realms"); 

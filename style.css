@@ -71,8 +71,6 @@ html {
 	width: 4.45vw;
 	top:-7vw;
 	left: 33vw;
-	
-	border: 1px solid blue;
 }
 
 #hand-op .card { position : absolute; }
